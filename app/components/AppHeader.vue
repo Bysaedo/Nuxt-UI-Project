@@ -11,6 +11,7 @@
 
     <template #right>
       <UColorModeButton />
+      <UAvatar text="SB" size="md" />
     </template>
   </UHeader>
 </template>
