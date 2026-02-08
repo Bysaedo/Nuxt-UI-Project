@@ -50,7 +50,7 @@
         >
           <div>
             <h3 class="font-semibold">Recent Tasks</h3>
-            <p class="text-sm text-muted">Add and manage your latest tasks</p>
+            <p class="text-sm text-muted">Add and manage your tasks</p>
           </div>
 
           <div class="flex items-center gap-2 w-full sm:w-auto">
@@ -106,12 +106,12 @@
                 {
                   label: task.completed ? 'Mark pending' : 'Mark complete',
                   icon: 'i-lucide-check',
-                  click: () => toggle(task.id),
+                  onSelect: () => toggle(task.id),
                 },
                 {
                   label: 'Delete',
                   icon: 'i-lucide-trash-2',
-                  click: () => remove(task.id),
+                  onSelect: () => askDelete(task.id),
                 },
               ]"
             >
@@ -122,6 +122,31 @@
                 size="xs"
               />
             </UDropdownMenu>
+            <UModal
+              v-model:open="confirmDelete"
+              title="Confirm Deletion"
+              :ui="{ width: 'max-w-md' }"
+            >
+              <template #body>
+                <p class="text-muted">
+                  Are you sure you want to delete this item? This action cannot
+                  be undone.
+                </p>
+              </template>
+              <template #footer>
+                <div class="flex justify-end gap-3">
+                  <UButton
+                    color="neutral"
+                    variant="outline"
+                    @click="confirmDelete = false"
+                    >Cancel</UButton
+                  >
+                  <UButton color="primary" @click="handleDelete"
+                    >Delete</UButton
+                  >
+                </div>
+              </template>
+            </UModal>
           </div>
         </div>
       </div>
@@ -132,6 +157,9 @@
 <script setup lang="ts">
 const name = "Sebastian";
 const newTask = ref("");
+const isOpen = ref(false);
+const confirmDelete = ref(false);
+const taskToDelete = ref<string | null>(null);
 
 type Task = {
   id: string;
@@ -254,5 +282,15 @@ function priorityColor(priority: Task["priority"]) {
   if (priority === "high") return "error";
   if (priority === "moderate") return "warning";
   return "success";
+}
+function askDelete(id: string) {
+  taskToDelete.value = id;
+  confirmDelete.value = true;
+}
+function handleDelete() {
+  if (!taskToDelete.value) return;
+  remove(taskToDelete.value);
+  confirmDelete.value = false;
+  taskToDelete.value = null;
 }
 </script>

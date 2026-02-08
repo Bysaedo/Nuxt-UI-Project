@@ -1,9 +1,12 @@
 <template>
   <UHeader title="SATM">
     <template #title>
-      <div class="flex items-center gap-2">
-        <UIcon name="i-lucide-flame" class="size-5" />
-        <span>SATM</span>
+      <div class="flex items-center gap-2 text-primary">
+        <UIcon name="i-lucide-bow-arrow" class="size-10" />
+        <div class="flex flex-col">
+          <span class="text-2xl">SATM</span>
+          <span class="text-xs text-muted">Sebastian Aedo Task Manager</span>
+        </div>
       </div>
     </template>
 
