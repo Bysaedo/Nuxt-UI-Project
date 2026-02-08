@@ -197,6 +197,7 @@
 
 <script setup lang="ts">
 import { message, type value } from "valibot";
+import { inject, watch } from "vue";
 
 const name = "Sebastian";
 const newTask = ref("");
@@ -217,79 +218,8 @@ type Task = {
   priority: "low" | "moderate" | "high";
 };
 
-const tasks = ref<Task[]>([
-  {
-    id: "1",
-    title: "Laundry",
-    completed: true,
-    createdAt: Date.now(),
-    priority: "high",
-  },
-  {
-    id: "2",
-    title: "Groceries",
-    completed: false,
-    createdAt: Date.now(),
-    priority: "moderate",
-  },
-  {
-    id: "3",
-    title: "Dishes",
-    completed: false,
-    createdAt: Date.now(),
-    priority: "low",
-  },
-  {
-    id: "4",
-    title: "Homework",
-    completed: true,
-    createdAt: Date.now(),
-    priority: "high",
-  },
-  {
-    id: "5",
-    title: "Clean floors",
-    completed: false,
-    createdAt: Date.now(),
-    priority: "low",
-  },
-  {
-    id: "6",
-    title: "Wash car",
-    completed: true,
-    createdAt: Date.now(),
-    priority: "low",
-  },
-  {
-    id: "7",
-    title: "Gym",
-    completed: true,
-    createdAt: Date.now(),
-    priority: "moderate",
-  },
-  {
-    id: "8",
-    title: "Shower",
-    completed: false,
-    createdAt: Date.now(),
-    priority: "moderate",
-  },
-  {
-    id: "9",
-    title: "Dinner",
-    completed: false,
-    createdAt: Date.now(),
-    priority: "low",
-  },
-  {
-    id: "10",
-    title: "Nap",
-    completed: true,
-    createdAt: Date.now(),
-    priority: "high",
-  },
-]);
-
+const tasks = inject("tasks", ref([]));
+const requestEditTaskId = inject("requestEditTaskId", ref(null));
 const totalTasks = computed(() => tasks.value.length);
 const completedTasks = computed(
   () => tasks.value.filter((t) => t.completed).length,
@@ -382,4 +312,13 @@ function showError(msg: string) {
     color: "error",
   });
 }
+watch(
+  () => requestEditTaskId.value,
+  (id: string | null) => {
+    if (!id) return;
+    const task = (tasks.value as Task[]).find((t) => t.id === id);
+    if (task) openEdit(task);
+    requestEditTaskId.value = null;
+  },
+);
 </script>

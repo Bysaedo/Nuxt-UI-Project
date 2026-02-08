@@ -1,37 +1,64 @@
 <template>
-  <UHeader title="SATM">
-    <template #title>
-      <div class="flex items-center gap-2 text-primary">
-        <UIcon name="i-lucide-bow-arrow" class="size-10" />
-        <div class="flex flex-col">
-          <span class="text-2xl">SATM</span>
-          <span class="text-xs text-muted">Sebastian Aedo Task Manager</span>
-        </div>
-      </div>
-    </template>
-
-    <UNavigationMenu :items="items" />
-
+  <UHeader>
     <template #right>
+      <UButton
+        icon="i-lucide-search"
+        variant="ghost"
+        color="neutral"
+        @click="open = true"
+      />
       <UColorModeButton />
       <UAvatar text="SB" size="md" />
     </template>
+    <ClientOnly>
+      <UDashboardSearch
+        v-model:open="open"
+        v-model:search-term="searchTerm"
+        :groups="groups"
+        placeholder="Search tasks"
+      />
+    </ClientOnly>
   </UHeader>
 </template>
 
 <script setup lang="ts">
-import type { NavigationMenuItem } from "@nuxt/ui";
+import { inject, ref, computed } from "vue";
+import type {
+  CommandPaletteGroup,
+  CommandPaletteItem,
+  NavigationMenuItem,
+} from "@nuxt/ui";
+const open = ref(false);
+const searchTerm = ref("");
+const tasks = inject<any>("tasks");
+const toggle = inject<(id: string) => void>("toggle");
+const requestEditTask = inject<(id: string) => void>("requestEditTask");
 
-const items = ref<NavigationMenuItem[]>([
+type Task = {
+  id: string;
+  title: string;
+  completed: boolean;
+  createdAt: number;
+  priority: "low" | "moderate" | "high";
+};
+if (!tasks || !toggle || !requestEditTask) {
+  throw new Error("Tasks not provided from layout");
+}
+
+const groups = computed<CommandPaletteGroup<CommandPaletteItem>[]>(() => [
   {
-    label: "Home",
-    icon: "i-lucide-house",
-    to: "/",
-  },
-  {
-    label: "Search tasks",
-    icon: "i-lucide-search",
-    to: "/searchPage",
+    id: "tasks",
+    label: "Tasks",
+    items: (tasks.value as Task[]).map((t) => ({
+      id: t.id,
+      label: t.title,
+      icon: t.completed ? "i-lucide-check-circle" : "i-lucide-circle",
+      description: t.priority,
+      onSelect: () => {
+        requestEditTask(t.id);
+        open.value = false;
+      },
+    })),
   },
 ]);
 </script>
