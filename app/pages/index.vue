@@ -182,7 +182,7 @@
                   ><UButton
                     color="primary"
                     @click="saveEdit"
-                    :diabled="!editTitle.trim()"
+                    :disabled="!editTitle.trim()"
                     >Save</UButton
                   >
                 </div></template
@@ -196,7 +196,7 @@
 </template>
 
 <script setup lang="ts">
-import type { value } from "valibot";
+import { message, type value } from "valibot";
 
 const name = "Sebastian";
 const newTask = ref("");
@@ -206,7 +206,8 @@ const taskToDelete = ref<string | null>(null);
 const editOpen = ref(false);
 const taskToEdit = ref<string | null>(null);
 const editTitle = ref("");
-const editPriority = ref<Task["Prioritu"]>("moderate");
+const editPriority = ref<Task["priority"]>("moderate");
+const toast = useToast();
 
 type Task = {
   id: string;
@@ -303,7 +304,7 @@ const recentTasks = computed(() =>
 
 function addTask() {
   const title = newTask.value.trim();
-  if (!title) return;
+  if (!title) return showError("Please type a task name first");
 
   tasks.value.unshift({
     id: crypto.randomUUID(),
@@ -314,6 +315,7 @@ function addTask() {
   });
 
   newTask.value = "";
+  showSuccess("You added a new task!");
 }
 
 function toggle(id: string) {
@@ -335,10 +337,11 @@ function askDelete(id: string) {
   confirmDelete.value = true;
 }
 function handleDelete() {
-  if (!taskToDelete.value) return;
+  if (!taskToDelete.value) return showError("No task selected to delete.");
   remove(taskToDelete.value);
   confirmDelete.value = false;
   taskToDelete.value = null;
+  showSuccess("Your task has been delete!");
 }
 function openEdit(task: Task) {
   taskToEdit.value = task.id;
@@ -348,7 +351,7 @@ function openEdit(task: Task) {
 }
 
 function saveEdit() {
-  if (!taskToEdit.value) return;
+  if (!taskToEdit.value) return showError("No task selected to edit.");
   const t = tasks.value.find((x) => x.id === taskToEdit.value);
   if (!t) return;
 
@@ -357,7 +360,26 @@ function saveEdit() {
   t.title = title;
   t.priority = editPriority.value;
 
+  showSuccess("Your changes have been saved.");
   editOpen.value = false;
   taskToEdit.value = null;
+}
+
+function showSuccess(msg: string) {
+  toast.add({
+    title: "Succes!",
+    description: msg,
+    icon: "i-lucide-check-circle",
+    color: "success",
+  });
+}
+
+function showError(msg: string) {
+  toast.add({
+    title: "Error",
+    description: msg,
+    icon: "i-lucide-alert-circle",
+    color: "error",
+  });
 }
 </script>
