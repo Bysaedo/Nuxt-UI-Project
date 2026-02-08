@@ -113,6 +113,11 @@
                   icon: 'i-lucide-trash-2',
                   onSelect: () => askDelete(task.id),
                 },
+                {
+                  label: 'Edit',
+                  icon: 'i-lucide-pencil',
+                  onSelect: () => openEdit(task),
+                },
               ]"
             >
               <UButton
@@ -147,6 +152,42 @@
                 </div>
               </template>
             </UModal>
+            <UModal
+              v-model:open="editOpen"
+              title="Edit Task"
+              :ui="{ width: 'max-w-md' }"
+              ><template #body>
+                <div class="space-y-4">
+                  <UFormField label="Title"
+                    ><UInput
+                      v-model="editTitle"
+                      placeholder="Task Title" /></UFormField
+                  ><UFormField label="Priority"
+                    ><USelect
+                      v-model="editPriority"
+                      :items="[
+                        { label: 'Low', value: 'low' },
+                        { label: 'Moderate', value: 'moderate' },
+                        { label: 'High', value: 'high' },
+                      ]"
+                    />
+                  </UFormField></div></template
+              ><template #footer>
+                <div class="flex justify-end gap-3">
+                  <UButton
+                    color="neutral"
+                    variant="outline"
+                    @click="editOpen = false"
+                    >Cancel</UButton
+                  ><UButton
+                    color="primary"
+                    @click="saveEdit"
+                    :diabled="!editTitle.trim()"
+                    >Save</UButton
+                  >
+                </div></template
+              ></UModal
+            >
           </div>
         </div>
       </div>
@@ -155,11 +196,17 @@
 </template>
 
 <script setup lang="ts">
+import type { value } from "valibot";
+
 const name = "Sebastian";
 const newTask = ref("");
 const isOpen = ref(false);
 const confirmDelete = ref(false);
 const taskToDelete = ref<string | null>(null);
+const editOpen = ref(false);
+const taskToEdit = ref<string | null>(null);
+const editTitle = ref("");
+const editPriority = ref<Task["Prioritu"]>("moderate");
 
 type Task = {
   id: string;
@@ -292,5 +339,25 @@ function handleDelete() {
   remove(taskToDelete.value);
   confirmDelete.value = false;
   taskToDelete.value = null;
+}
+function openEdit(task: Task) {
+  taskToEdit.value = task.id;
+  editTitle.value = task.title;
+  editPriority.value = task.priority;
+  editOpen.value = true;
+}
+
+function saveEdit() {
+  if (!taskToEdit.value) return;
+  const t = tasks.value.find((x) => x.id === taskToEdit.value);
+  if (!t) return;
+
+  const title = editTitle.value.trim();
+  if (!title) return;
+  t.title = title;
+  t.priority = editPriority.value;
+
+  editOpen.value = false;
+  taskToEdit.value = null;
 }
 </script>
