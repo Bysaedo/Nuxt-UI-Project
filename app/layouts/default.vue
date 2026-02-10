@@ -7,105 +7,106 @@
     <AppFooter />
   </div>
 </template>
+
 <script setup lang="ts">
 export type Task = {
-  id: string;
-  title: string;
-  completed: boolean;
-  createdAt: number;
-  priority: "low" | "moderate" | "high";
-};
+  id: string
+  title: string
+  completed: boolean
+  createdAt: number
+  priority: 'low' | 'moderate' | 'high'
+}
 
 const tasks = ref<Task[]>([
   {
-    id: "1",
-    title: "Laundry",
+    id: '1',
+    title: 'Laundry',
     completed: true,
     createdAt: Date.now(),
-    priority: "high",
+    priority: 'high'
   },
   {
-    id: "2",
-    title: "Groceries",
+    id: '2',
+    title: 'Groceries',
     completed: false,
     createdAt: Date.now(),
-    priority: "moderate",
+    priority: 'moderate'
   },
   {
-    id: "3",
-    title: "Dishes",
+    id: '3',
+    title: 'Dishes',
     completed: false,
     createdAt: Date.now(),
-    priority: "low",
+    priority: 'low'
   },
   {
-    id: "4",
-    title: "Homework",
+    id: '4',
+    title: 'Homework',
     completed: true,
     createdAt: Date.now(),
-    priority: "high",
+    priority: 'high'
   },
   {
-    id: "5",
-    title: "Clean floors",
+    id: '5',
+    title: 'Clean floors',
     completed: false,
     createdAt: Date.now(),
-    priority: "low",
+    priority: 'low'
   },
   {
-    id: "6",
-    title: "Wash car",
+    id: '6',
+    title: 'Wash car',
     completed: true,
     createdAt: Date.now(),
-    priority: "low",
+    priority: 'low'
   },
   {
-    id: "7",
-    title: "Gym",
+    id: '7',
+    title: 'Gym',
     completed: true,
     createdAt: Date.now(),
-    priority: "moderate",
+    priority: 'moderate'
   },
   {
-    id: "8",
-    title: "Shower",
+    id: '8',
+    title: 'Shower',
     completed: false,
     createdAt: Date.now(),
-    priority: "moderate",
+    priority: 'moderate'
   },
   {
-    id: "9",
-    title: "Dinner",
+    id: '9',
+    title: 'Dinner',
     completed: false,
     createdAt: Date.now(),
-    priority: "low",
+    priority: 'low'
   },
   {
-    id: "10",
-    title: "Nap",
+    id: '10',
+    title: 'Nap',
     completed: true,
     createdAt: Date.now(),
-    priority: "high",
-  },
-]);
+    priority: 'high'
+  }
+])
 
 function toggle(id: string) {
-  const t = tasks.value.find((x) => x.id === id);
-  if (t) t.completed = !t.completed;
+  const t = tasks.value.find(x => x.id === id)
+  if (t) t.completed = !t.completed
 }
 
 function remove(id: string) {
-  tasks.value = tasks.value.filter((t) => t.id !== id);
+  tasks.value = tasks.value.filter(t => t.id !== id)
 }
 
-const requestEditTaskId = ref<string | null>(null);
+const requestEditTaskId = ref<string | null>(null)
 function requestEditTask(id: string) {
-  requestEditTaskId.value = id;
+  requestEditTaskId.value = id
 }
 
-provide("tasks", tasks);
-provide("toggle", toggle);
-provide("remove", remove);
-provide("requestEditTaskId", requestEditTaskId);
-provide("requestEditTask", requestEditTask);
+provide('tasks', tasks)
+provide('toggle', toggle)
+provide('remove', remove)
+provide('requestEditTaskId', requestEditTaskId)
+provide('requestEditTask', requestEditTask)
 </script>
