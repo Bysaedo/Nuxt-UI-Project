@@ -1,5 +1,14 @@
 <template>
   <UHeader>
+    <template #title
+      ><div class="flex items-center gap-2 text-primary">
+        <UIcon name="i-lucide-bow-arrow" class="size-10" />
+        <div class="flex flex-col">
+          <span class="text-2xl">SATM</span>
+          <span class="text-xs text-muted">Sebastian Aedo Task Manager</span>
+        </div>
+      </div>
+    </template>
     <template #right>
       <UButton
         icon="i-lucide-search"
@@ -8,7 +17,7 @@
         @click="open = true"
       />
       <UColorModeButton />
-      <UAvatar text="SB" size="md" />
+      <UAvatar text="SB" size="md" class="cursor-pointer" />
     </template>
     <ClientOnly>
       <UDashboardSearch
@@ -16,7 +25,8 @@
         v-model:search-term="searchTerm"
         :groups="groups"
         placeholder="Search tasks"
-      />
+      >
+      </UDashboardSearch>
     </ClientOnly>
   </UHeader>
 </template>

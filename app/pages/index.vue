@@ -6,7 +6,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-      <UCard>
+      <UCard class="hover:bg-slate-100 dark:hover:bg-blue-800">
         <div class="flex items-center gap-4">
           <div class="p-3 bg-primary/10 rounded-lg">
             <UIcon name="i-lucide-file-text" class="size-6 text-primary" />
@@ -18,7 +18,7 @@
         </div>
       </UCard>
 
-      <UCard>
+      <UCard class="hover:bg-slate-100 dark:hover:bg-blue-800">
         <div class="flex items-center gap-4">
           <div class="p-3 bg-success/10 rounded-lg">
             <UIcon name="i-lucide-check-circle" class="size-6 text-success" />
@@ -30,7 +30,7 @@
         </div>
       </UCard>
 
-      <UCard>
+      <UCard class="hover:bg-slate-100 dark:hover:bg-blue-800">
         <div class="flex items-center gap-4">
           <div class="p-3 bg-warning/10 rounded-lg">
             <UIcon name="i-lucide-clock" class="size-6 text-warning" />
@@ -201,7 +201,6 @@ import { inject, watch } from "vue";
 
 const name = "Sebastian";
 const newTask = ref("");
-const isOpen = ref(false);
 const confirmDelete = ref(false);
 const taskToDelete = ref<string | null>(null);
 const editOpen = ref(false);
@@ -209,7 +208,6 @@ const taskToEdit = ref<string | null>(null);
 const editTitle = ref("");
 const editPriority = ref<Task["priority"]>("moderate");
 const toast = useToast();
-
 type Task = {
   id: string;
   title: string;
